@@ -1,5 +1,5 @@
 from gtts import gTTS
-from flask import Flask, send_file
+from flask import Flask, send_file, send_from_directory
 from googletrans import Translator
 #pip install googletrans==4.0.0rc1
 
@@ -9,16 +9,19 @@ countYes = 0
 
 @app.route("/")
 def hello_world():
-    return "<p>API running! Here's our website</p>"
+    return "<p>API running! Here's our website</p>" + f'The amount of votes for yes is {countYes} and the amount of votes for no is {countNo}'
 
-@app.route("/count/<YesNo>", methods=['POST'])
+@app.route("/count/<YesNo>", methods=['GET'])
 def resultsCount(YesNo= None):
     global countYes, countNo
     if int(YesNo) == 1:
         countYes += 1
     else:
         countNo += 1
-    return f'The amount of votes for yes is {countYes} and the amount of votes for no is {countNo}'
+    text = f'The amount of votes for yes is {countYes} and the amount of votes for no is {countNo}'
+    obj = gTTS(text=text, slow=False)
+    obj.save('registeredVotes.wav')
+    return send_file('registeredVotes.wav')
 
 
 @app.route("/speak/<lang>/<firstOption>/<secondOption>", methods=['GET'])
@@ -33,3 +36,13 @@ def resultsSpoken(firstOption = None, secondOption = None, lang="en"):
     obj = gTTS(text=translation.text, slow=False, lang=lang)
     obj.save('translation.wav')
     return send_file('translation.wav')
+
+@app.route("/vxml_yes.txt")
+def voteyes():
+    return send_from_directory(app.static_folder, 'vote_yes.xml')
+
+@app.route("/voteNo.xml")
+def voteno():
+    global countNo
+    countNo += 1
+    return send_from_directory(app.static_folder, 'vote_no.vxml')
