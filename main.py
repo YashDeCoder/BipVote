@@ -1,11 +1,14 @@
 from gtts import gTTS
 from flask import Flask, send_file, send_from_directory
 from googletrans import Translator
+import os
 #pip install googletrans==4.0.0rc1
 
 app = Flask(__name__)
 countNo = 0
 countYes = 0
+
+
 
 @app.route("/")
 def hello_world():
@@ -37,12 +40,18 @@ def resultsSpoken(firstOption = None, secondOption = None, lang="en"):
     obj.save('translation.wav')
     return send_file('translation.wav')
 
-@app.route("/vxml_yes.txt")
+@app.route("/vxml_yes")
 def voteyes():
-    return send_from_directory(app.static_folder, 'vote_yes.xml')
+    return send_from_directory(app.static_folder, 'vote_yes.vxml')
 
-@app.route("/voteNo.xml")
+@app.route("/voice")
+def voteVoice():
+    filepath = 'audio/registeredVotes.wav'
+    if os.path.isfile(filepath):
+        return open('audio/registeredVotes.wav', "r")
+    else:
+        console.log("Error")
+
+@app.route("/voteNo")
 def voteno():
-    global countNo
-    countNo += 1
     return send_from_directory(app.static_folder, 'vote_no.vxml')
