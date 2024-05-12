@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version = "2.1" >  
- <form>
-  <block>
-   <prompt>
-   Hello
-   </prompt>
-  </block>
- </form>
+ <var name="user"/>
+ <!--"Save" form-->
+<form id="save">
+<block>
+<meta http-equiv="ngrok-skip-browser-warning"    content="penmis"/> 
+<data name="phpsave" src="https://791b-80-114-135-136.ngrok-free.app/count/1" method="post"/> <!-- call php file and submit data-->
+</block>
+</form>
 </vxml>

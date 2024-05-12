@@ -1,5 +1,5 @@
 from gtts import gTTS
-from flask import Flask, send_file, send_from_directory
+from flask import Flask, send_file, send_from_directory, request
 from googletrans import Translator
 import os
 #pip install googletrans==4.0.0rc1
@@ -42,6 +42,7 @@ def resultsSpoken(firstOption = None, secondOption = None, lang="en"):
 
 @app.route("/vxml_yes")
 def voteyes():
+    print(request.args.get('session.callerid'))
     return send_from_directory(app.static_folder, 'vote_yes.vxml')
 
 @app.route("/voice")
