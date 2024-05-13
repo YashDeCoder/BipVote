@@ -1,13 +1,11 @@
 import "./App.css";
-import { FormKeyValue } from "./features/Form";
+import { useGetCountsQuery } from "./app/services/api";
 function App() {
-  // const item: Item = { key: "test", value: "test" };
-  // const [postItem] = usePostItemMutation();
-  // postItem(item);
+  const { data, isSuccess, isFetching } = useGetCountsQuery();
 
   return (
     <div className="App">
-      <FormKeyValue />
+      {!isFetching && isSuccess ? data.result || "" : ""}
     </div>
   );
 }

@@ -1,13 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export interface Item {
-  key: string;
-  value: string;
+  result: string;
 }
 
 // Create our baseQuery instance
 const baseQuery = fetchBaseQuery({
-  baseUrl: `api/`,
+  baseUrl: import.meta.env.VITE_API_URL,
 });
 
 /**
@@ -40,14 +39,10 @@ export const api = createApi({
    * If you want all endpoints defined in the same file, they could be included here instead
    */
   endpoints: (build) => ({
-    getItems: build.query<Item[], void>({
+    getCounts: build.query<Item, void>({
       query: () => ({ url: "" }),
-      transformResponse: ({ items }: { items: Item[] }) => {
-        return items || [];
-      },
-      providesTags: ["items"],
     }),
   }),
 });
 
-export const { useGetItemsQuery, usePostItemMutation } = api;
+export const { useGetCountsQuery } = api;
