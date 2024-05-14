@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version = "2.1" >  
 <!-- set input to DTMF-->
-<property name="inputmodes" value="dtmf" />
-
-
-<menu id="englishMenu">
+<menu id="englishMenu" dtmf="true">
     <prompt>Press 1 to get the current count of votes. Press 2 to reset the votes.</prompt>
     <choice dtmf="1" next="#getVotes"/>
     <choice dtmf="2" next="#resetVotes"/>
 </menu>
 
-  
+<form id="getVotes">
+  <block>
+  <prompt>
+    Fetching the current count of votes...
+    <break time="1s"/>
+    <audio src="votes/en"/>
+  </prompt>
+  </block>
+</form>
 
-  <form id="getVotes">
-    <block>
-      <prompt>Fetching the current count of votes...</prompt>
-      
-      <break time="5s"/>
-      <prompt>
-       <audio src="/amount_count"> 
-        <!-- to choose french, press 1. to choose english, press 2. --> 
-        </audio>
-      </prompt>
-    </block>
-  </form>
-
-  <form id="resetVotes">
-    <block>
-      <prompt>Resetting the votes...</prompt>
-      <data src="https://78cb-80-114-135-136.ngrok-free.app/reset/en" method="get"/>
-      <prompt>Votes have been reset</prompt>
-    </block>
-  </form>
+<form id="resetVotes">
+  <block>
+  <prompt>
+    Resetting the votes...
+    <break time="1s"/>
+    <audio src="reset/en"/>
+    The votes have been reset
+  </prompt>
+  </block>
+</form>
 </vxml>

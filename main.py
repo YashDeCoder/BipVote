@@ -1,7 +1,8 @@
 from gtts import gTTS
 from flask_cors import cross_origin
-from flask import Flask, send_file, send_from_directory, request, jsonify
+from flask import Flask, send_file, send_from_directory, request, jsonify, Response
 from googletrans import Translator
+from pydub import AudioSegment
 import os
 #pip install googletrans==4.0.0rc1
 
@@ -17,6 +18,11 @@ def hello_world():
     })
 
 ## AUXILLIARY METHODS
+# Convert mp3 to wav
+def convert_mp3_wav(filename):
+    sound = AudioSegment.from_mp3(filename)
+    sound.export(filename, format="wav")
+
 # Getting the current amount of votes
 def current_vote():
     countYes = read_last_number_from_file('votes/votes_yes.txt')
@@ -69,7 +75,7 @@ def register_count(YesNo, number):
 
 ## HTTP REQUESTS
 # Reset the votes
-@app.route("/reset/<lang>", methods=['GET'])
+@app.route("/reset/<lang>")
 def results_reset(lang="en"):
     firstOption = read_last_number_from_file('votes/votes_yes.txt')
     secondOption = read_last_number_from_file('votes/votes_no.txt')
@@ -81,31 +87,37 @@ def results_reset(lang="en"):
     translation = translator.translate(text, src='en', dest=lang)
     obj = gTTS(text=translation.text, slow=False, lang=lang)
     obj.save('audio/winner.wav')
+    convert_mp3_wav('audio/winner.wav')
     reset_files('votes/votes_no.txt', 'votes/votes_yes.txt', 'votes/votes_nums.txt')
-    return send_file('audio/winner.wav')
+    return  send_file("audio/winner.wav")
 
-@app.route("/votes/<lang>", methods=['GET'])
+@app.route("/votes/<lang>")
 def result_voice(lang="en"):
     countYes, countNo = current_vote()
-    text = f'The amount of votes for yes is {countYes} and the amount of votes for no is {countNo}'
+    text = f'The amount of votes for the first option is {countYes} and the amount of votes for second option is {countNo}'
     translator = Translator()
     translation = translator.translate(text, src='en', dest=lang)
     obj = gTTS(text=translation.text, slow=False, lang=lang)
     obj.save('audio/registeredVotes.wav')
-    return send_file('audio/registeredVotes.wav')
+    convert_mp3_wav('audio/registeredVotes.wav')
+    return send_file("audio/registeredVotes.wav")
 
 ## HOSTING VXML FILES 
 @app.route("/vxml_no")
 def voteno():
     number = str(request.args.get('session.callerid'))
-    register_count(0, number)
-    return send_from_directory(app.static_folder, 'voters/vote_no.vxml')
+    if register_count(0, number):
+        return send_from_directory(app.static_folder, 'voters/vote_counted.vxml')
+    else:
+        return send_from_directory(app.static_folder, 'voters/vote_not_counted.vxml')
 
 @app.route("/vxml_yes")
 def voteyes():
     number = str(request.args.get('session.callerid'))
-    register_count(1, number)
-    return send_from_directory(app.static_folder, 'voters/vote_yes.vxml')
+    if register_count(1, number):
+        return send_from_directory(app.static_folder, 'voters/vote_counted.vxml')
+    else:
+        return send_from_directory(app.static_folder, 'voters/vote_not_counted.vxml')
 
 @app.route("/vxml_organizers")
 def organizers():
@@ -124,33 +136,12 @@ def fr_organizers():
 def language_choice():
     return send_file("audio/languageChoice.wav")
 
-@app.route("/winner")
-def winner():
-    return send_file("audio/winner.wav")
-
-@app.route("/amount_count")
-def votes():
-    send_from_directory('audio', "registeredVotes.wav")
-
-@app.route("/frMain")
-def fr_main():
-    return send_file("audio/frMain.wav")
-
-@app.route("/frFetchVotes")
-def fr_fetch_votes():
-    return send_file("audio/frFetchVotes.wav")
-
-@app.route("/frResetVotes")
-def fr_reset_votes():
-    return send_file("audio/frResetVotes.wav")
-
-
 # To get wav files for certain audio
 @app.route("/voice")
 def voteVoice():
-    text = "The vote is being reset..."
+    text = "The votes have been reset"
     translator = Translator()
     translation = translator.translate(text, src='en', dest="fr")
     obj = gTTS(text=translation.text, slow=False, lang="fr")
     obj.save('audio/frResetVotes.wav')
-    return send_file('audio/frResetVotes.wav')
+    return translation.text
