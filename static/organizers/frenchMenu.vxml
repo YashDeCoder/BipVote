@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<vxml version = "2.1" >  
+<vxml version = "2.1" xml:lang="fr-FR">  
 <!-- set input to DTMF-->
-<property name="inputmodes" value="dtmf" />
-
-<menu id="frenchMenu">
-    <prompt><audio src="frMain"/></prompt>
+<menu id="frenchMenu" dtmf="true">
+    <prompt>Appuyez sur 1 pour obtenir le décompte actuel des votes.Appuyez sur 2 pour réinitialiser les votes.</prompt>
     <choice dtmf="1" next="#getVotes"/>
     <choice dtmf="2" next="#resetVotes"/>
 </menu>
-<form id="getVotes">
-    <block>
-      <prompt><audio src="frFetchVotes"/></prompt>
-      
-    </block>
-  </form>
 
-  <form id="resetVotes">
-    <block>
-      <prompt>Resetting the votes...</prompt>
-      <submit next="http://example.com/resetVotes" method="post"/>
-    </block>
-  </form>
+<form id="getVotes">
+  <block>
+  <prompt>
+    Récupérer le nombre actuel des votes ...
+    <break time="1s"/>
+    <audio src="votes/fr"/>
+  </prompt>
+  </block>
+</form>
+
+<form id="resetVotes">
+  <block>
+  <prompt>
+    Réinitialiser les votes ...
+    <break time="1s"/>
+    <audio src="reset/fr"/>
+    Les votes ont été réinitialisés
+  </prompt>
+  </block>
+</form>
 </vxml>

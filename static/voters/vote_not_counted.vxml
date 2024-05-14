@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version = "2.1" >  
-<!-- Could add a check for only once --> 
  <form>
   <block>
    <prompt>
-    Your vote has been counted
+    You can only vote once
    </prompt>
   </block>
  </form>
