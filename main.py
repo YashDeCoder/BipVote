@@ -3,7 +3,6 @@ from flask_cors import cross_origin
 from flask import Flask, send_file, send_from_directory, request, jsonify, Response
 from googletrans import Translator
 from pydub import AudioSegment
-import os
 #pip install googletrans==4.0.0rc1
 
 app = Flask(__name__)
@@ -14,7 +13,8 @@ app = Flask(__name__)
 def hello_world():
     countYes, countNo = current_vote()
     return jsonify({
-        "result": "<p>API running! Here's our website</p>" + f'The amount of votes for yes is {countYes} and the amount of votes for no is {countNo}', 
+        "countYes": countYes,
+        "countNo": countNo 
     })
 
 ## AUXILLIARY METHODS

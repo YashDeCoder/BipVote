@@ -1,11 +1,10 @@
 import "./App.css";
-import { useGetCountsQuery } from "./app/services/api";
-function App() {
-  const { data, isSuccess, isFetching } = useGetCountsQuery();
+import { ChartVotes } from "./features/ChartVotes";
 
+function App() {
   return (
     <div className="App">
-      {!isFetching && isSuccess ? data.result || "" : ""}
+      <ChartVotes />
     </div>
   );
 }
