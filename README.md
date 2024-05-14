@@ -33,6 +33,6 @@ ngrok http http://localhost:5000
 
 Ngrok will give you a link where your localhost is being forwarded to. Then you just need to point Voxeo to the routes that host the vxml files.
 
-- _urlBeingForwarded_/vxml_yes
-- _urlBeingForwarded_/vxml_no
-- _urlBeingForwarded_/vxml_organizers
+- _urlNgrokForwardedLocalHostTo_/vxml_yes
+- _urlNgrokForwardedLocalHostTo_/vxml_no
+- _urlNgrokForwardedLocalHostTo_/vxml_organizers
