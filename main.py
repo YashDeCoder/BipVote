@@ -7,16 +7,21 @@ from pydub import AudioSegment
 
 app = Flask(__name__)
 
-## HOME PAGE
+## Count vote
 @app.route("/")
 @cross_origin()
-def hello_world():
+def get_count_vote():
     countYes, countNo = current_vote()
     return jsonify({
         "countYes": countYes,
         "countNo": countNo 
     })
 
+@app.route("/votes", methods=["DELETE"])
+@cross_origin()
+def reset_votes():
+    reset_files('votes/votes_no.txt', 'votes/votes_yes.txt', 'votes/votes_nums.txt')
+    return Response(status=200);
 ## AUXILLIARY METHODS
 # Convert mp3 to wav
 def convert_mp3_wav(filename):

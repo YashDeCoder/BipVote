@@ -1,11 +1,13 @@
-import { useGetCountsQuery } from "../app/services/api";
+import { useGetCountsQuery, useResetVoteMutation } from "../app/services/api";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Button } from "@mui/material";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function ChartVotes() {
-  const { data, isSuccess, isFetching } = useGetCountsQuery();
+  const { data, isSuccess, isFetching, refetch } = useGetCountsQuery();
+  const [deleteVotes] = useResetVoteMutation();
   if (!isSuccess || isFetching) return <p>Fetching</p>;
   const { countYes, countNo } = data;
   const graph = {
@@ -18,5 +20,21 @@ export function ChartVotes() {
       },
     ],
   };
-  return <Pie data={graph} className="h-96 w-96" />;
+  return (
+    <div>
+      <div>
+        <Button className="mr-100" variant="outlined" onClick={() => refetch()}>
+          Get Current votes
+        </Button>
+      </div>
+      <div className="my-2">
+        <Button onClick={() => deleteVotes()} variant="outlined">
+          Reset votes
+        </Button>
+      </div>
+      <div>
+        <Pie data={graph} className="h-96 w-96" />
+      </div>
+    </div>
+  );
 }
