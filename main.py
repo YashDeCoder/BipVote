@@ -1,17 +1,21 @@
 from gtts import gTTS
-from flask import Flask, send_file, send_from_directory, request, Response
+from flask_cors import cross_origin
+from flask import Flask, send_file, send_from_directory, request, jsonify, Response
 from googletrans import Translator
 from pydub import AudioSegment
-import os
 #pip install googletrans==4.0.0rc1
 
 app = Flask(__name__)
 
 ## HOME PAGE
 @app.route("/")
+@cross_origin()
 def hello_world():
     countYes, countNo = current_vote()
-    return "<p>API running! Here's our website</p>" + f'The amount of votes for yes is {countYes} and the amount of votes for no is {countNo}'
+    return jsonify({
+        "countYes": countYes,
+        "countNo": countNo 
+    })
 
 ## AUXILLIARY METHODS
 # Convert mp3 to wav

@@ -36,3 +36,24 @@ Ngrok will give you a link where your localhost is being forwarded to. Then you 
 - _urlNgrokForwardedLocalHostTo_/vxml_yes
 - _urlNgrokForwardedLocalHostTo_/vxml_no
 - _urlNgrokForwardedLocalHostTo_/vxml_organizers
+
+## Running the frontend
+
+First install yarn on your pc, see tutorial (https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable).
+After that install the packages
+
+```sh
+yarn install
+```
+
+To add a reference to BipVote API add in the environment or change in the variable in the .env.development file.
+
+```sh
+VITE__API__URL=REFERENCE__API
+```
+
+After that with you can start the run the frontend with
+
+```sh
+yarn dev
+```
