@@ -33,7 +33,7 @@ export const api = createApi({
    * Tag types must be defined in the original API definition
    * for any tags that would be provided by injected endpoints
    */
-  tagTypes: ["items"],
+  tagTypes: ["votes"],
   /**
    * This api has endpoints injected in adjacent files,
    * which is why no endpoints are shown below.
@@ -42,8 +42,13 @@ export const api = createApi({
   endpoints: (build) => ({
     getCounts: build.query<Item, void>({
       query: () => ({ url: "" }),
+      providesTags: ["votes"],
+    }),
+    resetVote: build.mutation<void, void>({
+      query: () => ({ url: "votes", method: "DELETE" }),
+      invalidatesTags: ["votes"],
     }),
   }),
 });
 
-export const { useGetCountsQuery } = api;
+export const { useGetCountsQuery, useResetVoteMutation } = api;
